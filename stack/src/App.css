@@ -1,0 +1,741 @@
+/* Not Found  */
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--primary-color);
+}
+
+/* Home component */
+.home-page {
+  display: flex;
+  min-height: 550px;
+  background-color: var(--primary-background-color);
+}
+
+.welcome-text {
+  font-size: 60px;
+}
+
+.stack-me {
+  color: var(--primary-color);
+}
+
+.left-body {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  justify-content: center;
+}
+
+.left-body .CTA {
+  width: fit-content;
+  border-radius: 7px;
+  font-size: 32px;
+}
+
+.left-body .CTA:after {
+  font-weight: bold;
+  display: block;
+  content: attr(title);
+  height: 1px;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.left-body .CTA:hover {
+  font-weight: bold;
+}
+
+/* Header Component */
+
+.header {
+  background: var(--secondary-background-color);
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
+  gap: 1em;
+  min-height: 100px;
+  align-items: center;
+}
+
+.header-section {
+  display: flex;
+  gap: 1em;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.bookstore-logo {
+  display: flex;
+}
+
+.logo {
+  width: 74px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.text-logo {
+  font-family: var(--title-font-family);
+  color: var(--primary-color);
+  font-size: 48px;
+  cursor: pointer;
+  transform: rotate(-15deg);
+}
+
+.search-bar {
+  padding: 0.5em;
+}
+
+.search-bar .icon {
+  cursor: pointer;
+  position: absolute;
+  font-size: 26px;
+  color: var(--primary-color);
+  margin-left: 360px;
+  padding: 0.25em 0 0 0.25em;
+}
+
+.search-bar .input-text {
+  border-radius: 10px;
+  width: 400px;
+  height: 40px;
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.my-cart .cart {
+  cursor: pointer;
+  font-size: 32px;
+  color: var(--primary-color);
+}
+.my-cart {
+  position: relative;
+}
+
+.my-cart .badge {
+  color: var(--primary-color);
+  position: absolute;
+  font-size: 15px;
+  margin: -15px -10px;
+  cursor: pointer;
+  padding: 0 5px;
+  font-weight: bold;
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+}
+.logout {
+  font-size: 15px;
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.log:hover {
+  font-weight: bold;
+}
+.log:after {
+  font-weight: bold;
+  display: block;
+  content: attr(title);
+  height: 1px;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.profile {
+  padding: 0.5em;
+}
+.profile .profile-button {
+  border-color: var(--primary-color);
+}
+.profile .profile-button:hover {
+  color: #fdd449;
+}
+
+/* Home staff List Component */
+.home-images img {
+  cursor: pointer;
+  width: 130px;
+  height: 200px;
+}
+.home-images div {
+  color: black;
+  text-align: left;
+  width: 150px;
+}
+
+.staff-picks {
+  padding: 2em;
+  display: flex;
+  justify-content: center;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  font-style: italic;
+  font-size: 32px;
+  font-family: Archivo, serif;
+}
+.home-images ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+.book-title {
+  padding: 1em 0 0 0;
+  font-size: 24px;
+  font-family: Alegreya SC, serif;
+  text-transform: uppercase;
+}
+
+.book-author {
+  font-family: Alegreya SC, serif;
+  font-size: 15px;
+  font-style: italic;
+}
+
+/* Footer Component  */
+
+.footer {
+  background: var(--secondary-background-color);
+  justify-content: space-between;
+  gap: 1em;
+  height: 150px;
+}
+
+.upper-footer {
+  display: flex;
+  padding-top: 18px;
+  font-size: x-large;
+  height: 40%;
+  gap: inherit;
+  justify-content: center;
+}
+.middle-footer {
+  height: 40%;
+  font-size: x-large;
+  display: flex;
+  gap: inherit;
+  padding: 0.5rem;
+  justify-content: center;
+}
+
+.lower-footer {
+  display: flex;
+  height: 20%;
+  background: var(--primary-color);
+}
+
+.lower-footer .lower {
+  color: white;
+  font-size: 15px;
+  margin: auto;
+}
+
+
+/* HeaderDropDown Component */
+
+.header-dropdown {
+  position: relative;
+}
+
+.categories-button {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.header-dropdown ul {
+  display: none;
+  background-color: white;
+  color: black;
+  opacity: 0;
+  position: absolute;
+  height: auto;
+  min-width: 8em;
+  z-index: 1;
+  cursor: pointer;
+  transition: all 500ms linear;
+}
+
+.header-dropdown li {
+  padding: 0.25em 0.5em;
+}
+
+.header-dropdown a {
+  /* display: block; */
+  color: black;
+  text-decoration: none;
+}
+
+.header-dropdown li:hover {
+  /* display: block; */
+  background: lightgray;
+  font-style: italic;
+}
+
+.header-dropdown:hover ul {
+  display: block;
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 500ms ease-in-out;
+}
+
+
+/* Category Component  */
+
+.category-page {
+  min-height: 550px;
+  background-color: white;
+}
+
+/* Category Nav Component  */
+
+.category-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: center;
+  width: inherit;
+  height: 80px;
+  font-weight: Bold;
+  font-size: 24px;
+  background-color: var(--primary-color);
+}
+
+.category-buttons .button {
+  width: 200px;
+  margin: 12px;
+  border-radius: 10px;
+  color: black;
+}
+
+.button.selected-category-button {
+  background-color: black;
+  color: white;
+}
+
+.button.unselected-category-button,
+.button.unselected-category-button:visited {
+  background-color: var(--neutral-color);
+}
+
+.button.unselected-category-button:hover,
+.button.unselected-category-button:active {
+  font-style: italic;
+  font-weight: normal;
+  color: var(--primary-color);
+}
+
+/* Category BookList  */
+
+/* .bookList {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5em;
+  justify-content: space-between;
+} */
+
+.bookList {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5em;
+}
+/* Category Book Boxes  */
+
+.book-box {
+  display: flex;
+  margin: 1em;
+}
+
+.book-image {
+  cursor: pointer;
+  width: 130px;
+  height: 200px;
+}
+
+.details {
+  margin-left: 10px;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+}
+.details button {
+  width: 140px;
+}
+
+.book-info {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.book-price {
+  font-family: Alegreya, serif;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.preview {
+  background-color: var(--secondary-background-color);
+  color: black;
+  transform: translateY(-250%);
+  width: inherit;
+}
+
+.preview:hover {
+  font-weight: bold;
+}
+
+.button.add-to-cart:hover {
+  transition: background-color 0.5s;
+  background-color: var(--secondary-background-color);
+  color: black;
+}
+
+.button.add-to-cart:not(:hover) {
+  transition: background-color 1s;
+}
+
+.book-title {
+  font-family: Alegreya SC, serif;
+  margin-top: -15%;
+  text-transform: uppercase;
+}
+
+.book-author {
+  font-style: oblique;
+  font-family: Alegreya, serif;
+}
+
+/* Cart Page  */
+
+.lower-button {
+  display: flex;
+  margin: 1em;
+  justify-content: space-evenly;
+}
+
+.lower-button .CTA {
+  border-radius: 7px;
+  margin-left: 4em;
+}
+
+.lower-button .CTA:hover {
+  transition: background-color 0.5s;
+  background-color: var(--secondary-background-color);
+  color: black;
+}
+.lower-button .CTA:not(:hover) {
+  transition: background-color 1s;
+}
+
+/* Cart Table  */
+
+.cartNav {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px;
+}
+
+.cartDetails {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.t-button {
+  font-size: 15px;
+  color: blue;
+  text-decoration: underline;
+  margin-top: 0.6em;
+  margin-left: 5em;
+}
+.t-button:hover {
+  font-style: italic;
+  cursor: pointer;
+}
+.cart-table {
+  display: grid;
+  grid-template-columns: max-content minmax(10em, 20em) repeat(3, max-content);
+  row-gap: 1em;
+  width: fit-content;
+  margin: 0 auto;
+  background-color: aliceblue;
+}
+
+.cart-table ul {
+  display: contents;
+}
+
+.cart-table ul > li {
+  display: contents;
+}
+
+.table-heading {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.table-heading > * {
+  background-color: var(--primary-color);
+  padding: 0.5em;
+}
+
+.heading-book {
+  grid-column: 1 / 3;
+  font-size: 1em;
+}
+
+.heading-price {
+  grid-column: 3 / 5;
+  text-align: center;
+  font-size: 1em;
+}
+
+.heading-subtotal {
+  text-align: right;
+  grid-column: -2 / -1;
+  font-size: 1em;
+}
+
+.cart-book-image {
+  padding: 0 1em;
+}
+
+.cart-book-image > * {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.cart-table img {
+  display: block;
+  width: 100px;
+  height: auto;
+}
+
+.cart-book-price {
+  padding-left: 1em;
+  text-align: right;
+  font-size: 1.125rem;
+}
+
+.cart-book-quantity {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.cart-book-subtotal {
+  text-align: right;
+  padding-left: 1em;
+  padding-right: 1em;
+  font-size: 1.125rem;
+}
+
+/* Row separators in the table */
+
+.line-sep {
+  display: block;
+  height: 2px;
+  background-color: var(--primary-color);
+  grid-column: 1 / -1;
+}
+
+/* Increment/decrement buttons */
+
+.inc-button {
+  font-size: 1.125rem;
+  color: var(--primary-color);
+  margin: 0 0.25em;
+}
+
+.inc-button:hover {
+  color: var(--primary-color);
+}
+
+.dec-button {
+  font-size: 1.125rem;
+  color: #ccc;
+  margin: 0 0.25em;
+}
+
+.dec-button:hover {
+  color: #aaa;
+}
+.quantity {
+  font-size: 1.125rem;
+}
+.cart-nav select {
+  background-color: var(--primary-color);
+  color: white;
+  border: 2px solid var(--primary-color);
+  border-radius: 3px;
+}
+
+.cart-book-total {
+  text-align: right;
+  margin: 0.5em;
+  font-weight: bold;
+}
+
+
+/* Checkout Page  */
+
+.checkout-page-body {
+  display: flex;
+  padding: 1em;
+  align-items: center;
+  flex-direction: column;
+}
+.checkout-page-body .checkout-heading {
+  font-style: italic;
+  padding: 0.8em;
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+.empty-checkout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1em;
+}
+.checkout-page-body form {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-page-body form > div > div {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5em;
+  align-items: center;
+}
+.input-error {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.checkout-page-body input,
+.checkout-page-body select {
+  margin-left: 0.5em;
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+}
+
+.checkoutStatusBox {
+  margin: 0.5em;
+  padding: 0.5em;
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+.checkout-page .button {
+  width: fit-content;
+}
+
+.checkout-page .button:hover {
+  transition: background-color 0.5s;
+  background-color: var(--secondary-background-color);
+  color: black;
+}
+.checkout-page .button:not(:hover) {
+  transition: background-color 1s;
+}
+.checkout-page .submit-button {
+  margin: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checkout-details {
+  text-align: center;
+}
+.error {
+  color: #dc143c;
+  font-style: italic;
+}
+
+/* Confirmation Page  */
+
+.confirmation-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  min-height: 30em;
+  justify-content: center; /* Remove this and above line if anything unusual*/
+
+}
+.conf-header ul {
+  text-align: center;
+}
+.conf-header ul > li {
+  margin: 0.25em;
+}
+.conf-header {
+  color: var(--primary-color);
+  font-style: italic;
+  margin: 0.25em;
+  text-decoration: underline;
+  display: flex;
+  justify-content: center;
+}
+
+.customerInfo {
+  border: 1px black dashed;
+  padding: 0.5em;
+}
+
+.bottom-button {
+  display: flex;
+  justify-content: center;
+}
+
+/* Confirmation Table  */
+
+.confirmation-table table {
+  border: 1px black solid;
+  width: fit-content;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border-collapse: collapse;
+}
+.price-style {
+  text-align: center;
+  font-weight: bold;
+}
+.confirmation-table tr .total {
+  text-align: right;
+  font-weight: bold;
+}
+.confirmation-table td,
+.confirmation-table th {
+  display: table-cell;
+  padding: 0.5em 0.5em;
+  background-color: white;
+  vertical-align: middle;
+  border: 1px black solid;
+  border-collapse: collapse;
+}
+
+.confirmation-table tr:nth-child(even) > td {
+  background-color: lightgray;
+}
+
+.confirmation-table td:nth-child(1) {
+  text-align: left;
+}
+
+.confirmation-table td:nth-child(2) {
+  text-align: center;
+}
+
+.confirmation-table td:nth-child(3) {
+  text-align: right;
+}
+.confirmation-table td:last-child {
+  text-align: right;
+}
