@@ -29,7 +29,7 @@ export interface CustomerForm {
 }
 
 export interface Order {
-  orderId: number;
+  orderId: string;
   amount: number;
   dateCreated: number;
   confirmationNumber: number;
@@ -78,4 +78,9 @@ const PriceFormatter = new Intl.NumberFormat("en-US", {
 
 export const asDollarsAndCents = function (cents: number) {
   return PriceFormatter.format(cents / 100.0);
+};
+
+export const my_orderDate = (orderDate: number) => {
+  const date = new Date(orderDate);
+  return date.toLocaleTimeString();
 };

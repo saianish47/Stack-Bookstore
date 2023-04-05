@@ -1,7 +1,6 @@
 import React from "react";
-import { CategoryContext } from "../contexts/CategoryContext";
+import { CategoryContext } from "../contexts/CategoryProvider";
 import { OrderContext } from "../contexts/OrderProvider";
-// import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ConfirmationTable } from "../components/ConfirmationTable";
 
@@ -9,17 +8,10 @@ const Confirmation = () => {
   const { selectedCategory } = React.useContext(CategoryContext);
   const { orderDetails, hasOrderDetails } = React.useContext(OrderContext);
 
-  //   const orderDate = useMemo(() => {
-  //     const date = new Date(orderDetails.order.dateCreated);
-  //     return date.toLocaleTimeString();
-  //   }, [orderDetails.order.dateCreated]);
   const orderDate = () => {
     const date = new Date(orderDetails.order.dateCreated);
     return date.toLocaleTimeString();
   };
-  //   const ccExpDate = (): Date => {
-  //     return new Date(orderDetails.customer.cc);
-  //   };
 
   const ccNumber = (): string => {
     return orderDetails.customer.ccNumber.trim().slice(-4);
@@ -38,7 +30,6 @@ const Confirmation = () => {
     return result;
   };
   const flag = hasOrderDetails();
-  console.log(flag);
 
   return (
     <div className="confirmation-area">
@@ -69,7 +60,7 @@ const Confirmation = () => {
               **** **** **** {ccNumber()} ({ccExpMonth()}-{ccExpYear()})
             </li>
           </ul>
-          <ConfirmationTable />
+          <ConfirmationTable orderDetails={orderDetails} />
           <section className="bottom-button">
             <Link
               to={`/category/${selectedCategory}`}

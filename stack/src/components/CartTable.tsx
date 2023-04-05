@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { asDollarsAndCents, BookItem } from "../models/types";
 import { CartContext } from "../contexts/CartProvider";
 import { Link } from "react-router-dom";
-import { CategoryContext } from "../contexts/CategoryContext";
+import { CategoryContext } from "../contexts/CategoryProvider";
 
 function CartTable() {
   const { count, cart, clearCart, updateBookQuantity } =

@@ -7,7 +7,7 @@ const Home = () => {
   console.log("Inside Home");
   return (
     <div className="home-page">
-      <section className="left-body container">
+      <section className="left-body my-container">
         <h1 className="welcome-text">
           <span className="stack-me">Stack</span> up your room with our wide
           collection of books...
@@ -18,7 +18,7 @@ const Home = () => {
           SHOP BOOKS!!!
         </Link>
       </section>
-      <section className="category-images container">
+      <section className="category-images my-container">
         <StaffContextProvider>
           <HomeStaffList />
         </StaffContextProvider>

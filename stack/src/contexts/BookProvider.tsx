@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react";
-import { BooksContext } from "./BooksContext";
 import axios from "axios";
 import React from "react";
+import { BookItem } from "../models/types";
 
 interface BookProviderProps {
   children: React.ReactNode;
   categoryName: string;
 }
+
+interface BooksContextValue {
+  books: BookItem[];
+  updateBooks: (categoryName: string) => void;
+}
+
+export const BooksContext = React.createContext<BooksContextValue>({
+  books: [],
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  updateBooks: () => {},
+});
 
 function BooksProvider({ children, categoryName = "" }: BookProviderProps) {
   const [books, setBooks] = useState([]);

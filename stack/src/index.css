@@ -132,7 +132,7 @@ textarea {
   Giving various sections of your page this utility class
   will ensure a nice padding around the contents.
 */
-.container {
+.my-container {
     padding: 1rem;
 }
 

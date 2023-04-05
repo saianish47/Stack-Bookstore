@@ -1,15 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HeaderDropdown from "./HeaderDropdown";
+import useUser from "../hooks/useUser";
 import React from "react";
-import { CategoryContext } from "../contexts/CategoryContext";
+import { CategoryContext } from "../contexts/CategoryProvider";
 import { CartContext } from "../contexts/CartProvider";
+import { Profile } from "./Profile";
 
 function Header() {
   const { category } = React.useContext(CategoryContext);
   const { cart } = React.useContext(CartContext);
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   return (
-    <div className="header container">
+    <div className="header my-container">
       <section className="bookstore-logo">
         <Link to="/">
           <img
@@ -40,16 +44,42 @@ function Header() {
             <span className="badge"> {cart.numberOfItems} </span>
           </section>
         </Link>
-        <section className="profile">
-          <button className="button profile-button">
-            <i className="icon fa-solid fa-user"></i> SAC
-          </button>
-        </section>
-        <section className="logout">
-          <p className="log" title="Logout">
-            Logout
-          </p>
-        </section>
+        {user ? (
+          // <section className="profile">
+          //   <button
+          //     className="button profile-button"
+          //     onClick={() => {
+          //       navigate("./profile");
+          //     }}
+          //   >
+          //     <i className="icon fa-solid fa-user"></i> Profile
+          //   </button>
+
+          //   <section className="logout">
+          //     <p
+          //       className="log"
+          //       title="Logout"
+          //       onClick={() => {
+          //         signOut(getAuth());
+          //       }}
+          //     >
+          //       Logout
+          //     </p>
+          //   </section>
+          // </section>
+          <Profile />
+        ) : (
+          <section className="profile">
+            <button
+              className="button profile-button"
+              onClick={() => {
+                navigate("./login");
+              }}
+            >
+              <i className="icon fa-solid fa-user"></i> Login
+            </button>
+          </section>
+        )}
       </section>
     </div>
   );

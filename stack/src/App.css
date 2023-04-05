@@ -157,6 +157,14 @@
   color: #fdd449;
 }
 
+/* Profle button */
+
+.dropdown-menu.custom {
+  --bs-dropdown-min-width: 5rem;
+  right: 0;
+  left: auto;
+}
+
 /* Home staff List Component */
 .home-images img {
   cursor: pointer;
@@ -581,6 +589,79 @@
   font-weight: bold;
 }
 
+/* Login Page */
+
+.auth-page-body {
+  display: flex;
+  padding: 1em;
+  align-items: center;
+  flex-direction: column;
+  min-height: 400px;
+  justify-content: center;
+}
+
+/* .auth-page-body .email {
+  background: white;
+  box-shadow: 0 0 2em #e6e9f9;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  border-radius: 20px;
+  color: #4d4d4d;
+} */
+
+.auth-page-body .auth-heading {
+  font-style: italic;
+  padding: 0.5em;
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.error-auth {
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1em; */
+  color: #dc143c;
+  font-style: italic;
+}
+
+.auth-page-body input{
+  margin: 0.5em;
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+}
+
+.auth-page-body button {
+  width: fit-content;
+  margin-top: 1em;
+}
+
+
+.auth-page-body button:hover {
+  transition: background-color 0.5s;
+  background-color: var(--secondary-background-color);
+  color: black;
+}
+
+.auth-page-body button:not(:hover) {
+  transition: background-color 1s;
+}
+.auth-page-body .checkout-page .submit-button {
+  margin: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-page-body .bottom-msg{
+  text-decoration: underline;
+  color: blue;
+  font-size: small;
+  font-style: italic;
+  margin: 0.5em;
+}
 
 /* Checkout Page  */
 
@@ -656,6 +737,22 @@
 .error {
   color: #dc143c;
   font-style: italic;
+}
+
+/* My Orders Page */
+
+.order-area{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  min-height: 10em;
+  justify-content: center; /* Remove this and above line if anything unusual*/
+}
+.click-order{
+  text-decoration: underline;
+  cursor: pointer;
+  font-style: oblique;
 }
 
 /* Confirmation Page  */

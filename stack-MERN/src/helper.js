@@ -50,8 +50,8 @@ async function getRandom(field, value, limit) {
 }
 
 
-function generateIds(){
-    const uniqueCustomerId = uuidv4().replace(/-/g, '').slice(0, 16);
+function generateIds(uid){
+    const uniqueCustomerId = uid ? uid : uuidv4().replace(/-/g, '').slice(0, 16) ;
     const uniqueOrderId = uuidv4().replace(/-/g, '').slice(0, 16);
     return [uniqueCustomerId, uniqueOrderId];
 }
@@ -59,8 +59,8 @@ function generateConfirmationNumber() {
     return Math.floor(Math.random() * 1000000000);
   }
 
-function createOrder(req){
-    const [customerId, orderId] = generateIds();
+function createOrder(req, uid){
+    const [customerId, orderId] = generateIds(uid);
     const amount = req.amount;
     const dateCreated = Date.now();
     const confirmationNumber = generateConfirmationNumber();

@@ -36,7 +36,7 @@ const ORDER_DETAIL_STORAGE_KEY = "orderDetail";
 export const OrderProvider = ({ children }: OrderProviderProps) => {
   const temporderDetails: OrderDetails = {
     order: {
-      orderId: 0,
+      orderId: "",
       amount: 0,
       dateCreated: 0,
       confirmationNumber: 0,

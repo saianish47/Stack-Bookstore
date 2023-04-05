@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useState } from "react";
+import useUser from "../hooks/useUser";
 import { ShoppingCart } from "../models/ShoppingCart";
 import {
   asDollarsAndCents,
@@ -7,6 +8,7 @@ import {
   CustomerForm,
   OrderDetails,
 } from "../models/types";
+
 import { OrderContext } from "./OrderProvider";
 
 const CART_STORAGE_KEY = "ShoppingCart";
@@ -47,6 +49,8 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const [cart, setCart] = useState(initialCart);
   const [count, setCount] = useState(0);
 
+  const { user } = useUser();
+
   const clearCart = () => {
     cart.clear();
     setCart(cart);
@@ -75,12 +79,14 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     console.log(JSON.stringify(order, null, 2));
 
     const url = "/api/orders";
+    const token = user && (await user.getIdToken());
     const orderDetails: OrderDetails = await fetch(url, {
       mode: "cors",
       cache: "no-cache",
       credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
+        authtoken: token ? token : "",
       },
       redirect: "follow",
       referrer: "client",

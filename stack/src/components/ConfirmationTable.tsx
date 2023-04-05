@@ -1,9 +1,12 @@
 import React from "react";
-import { OrderContext } from "../contexts/OrderProvider";
 import { asDollarsAndCents } from "../models/types";
+import { OrderDetails } from "../models/types";
 
-function ConfirmationTable() {
-  const { orderDetails } = React.useContext(OrderContext);
+interface OrderProps {
+  orderDetails: OrderDetails;
+}
+
+function ConfirmationTable({ orderDetails }: OrderProps) {
   return (
     <table className="confirmation-table">
       <thead>

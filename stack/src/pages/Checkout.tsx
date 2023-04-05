@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../contexts/CartProvider";
-import { CategoryContext } from "../contexts/CategoryContext";
+import { CategoryContext } from "../contexts/CategoryProvider";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { isMobilePhone, isCreditCard } from "../validator";
 import { asDollarsAndCents } from "../models/types";
@@ -99,7 +99,7 @@ function Checkout() {
     <div className="checkout-page">
       {cart.empty ? (
         <section className="empty-checkout">
-          <strong className="container">
+          <strong className="my-container">
             Please add an item to your cart to checkout
           </strong>
           <Link to={`/category/${selectedCategory}`} className="sec-button sec">

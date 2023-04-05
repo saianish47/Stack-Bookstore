@@ -3,9 +3,22 @@ import {db, connectToDB} from "./connect.js";
 import helper from "./helper.js";
 import validator from "./validator.js"
 // import mycors from "./cors.js";
+import fs from "fs";
+import admin from "firebase-admin";
+
+const credentials = JSON.parse(
+    fs.readFileSync('./credentials.json')
+);
+
+admin.initializeApp({
+    credential: admin.credential.cert(credentials),
+});
+
 
 const app = express();
 app.use(express.json());
+
+
 
 // Get Category
 
@@ -139,12 +152,31 @@ app.get('/api/categories/name/:name/suggested-books', async (req, res) => {
     res.json(books);
 });
 
+app.use(async (req, res, next) => {
+    const {authtoken} = req.headers;
+    if (authtoken){
+        try {
+            req.user = await admin.auth().verifyIdToken(authtoken);
+        }
+        catch(e){
+            return res.sendStatus(400);
+        }
+    }
+    else{
+        req.user = {uid: null};
+    }
+
+    next();
+})
+
 // /api/orders
 
 app.post('/api/orders', async(req,res) => {
 
+    const {uid} = req.user;
+
     const collection = await db.collection('orders');
-    const [code, orderDetails] = helper.createOrder(req.body);
+    const [code, orderDetails] = helper.createOrder(req.body, uid);
 
     if (code == 500){
         return res.status(500).json(orderDetails);
@@ -159,6 +191,16 @@ app.post('/api/orders', async(req,res) => {
         return res.sendStatus(500);
     }
 });
+
+app.get('/api/orders', async(req, res) => {
+    const {uid} = req.user;
+    if (!uid){
+        return res.status(401).send('Unauthorized')
+    }
+    const collection = await db.collection('orders');
+    const result = await collection.find({'order.customerId': uid}).toArray();
+    return res.json(result);
+})
 
 
 connectToDB(()=>{
