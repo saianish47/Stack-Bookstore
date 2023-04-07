@@ -24,7 +24,7 @@ export const OrderDetailsComponent = () => {
               <li>
                 Confirmation #: <b>{orderDetails.order.confirmationNumber}</b>
               </li>
-              <li>Time: {my_orderDate(orderDetails.order.dateCreated)}</li>
+              <li>Date: {my_orderDate(orderDetails.order.dateCreated)}</li>
             </ul>
             <ul className="customerInfo mb-3">
               <h3>Customer Information</h3>

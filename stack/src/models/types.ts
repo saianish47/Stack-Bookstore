@@ -46,29 +46,6 @@ export interface cartItem {
   book: BookItem;
   quantity: number;
 }
-// export interface CustomerForm {
-//   name: string;
-//   address: string;
-//   phone: string;
-//   email: string;
-//   ccNumber: string;
-//   ccExpiryMonth: number;
-//   ccExpiryYear: number;
-// }
-
-// export interface Order {
-//   orderId: number;
-//   amount: number;
-//   dateCreated: number;
-//   confirmationNumber: number;
-//   customerId: number;
-// }
-
-// export interface OrderDetails {
-//   order: Order;
-//   customer: CustomerForm;
-//   books: BookItem[];
-// }
 
 const PriceFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -82,5 +59,7 @@ export const asDollarsAndCents = function (cents: number) {
 
 export const my_orderDate = (orderDate: number) => {
   const date = new Date(orderDate);
-  return date.toLocaleTimeString();
+  const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+
+  return formattedDate;
 };

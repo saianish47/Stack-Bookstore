@@ -3,15 +3,11 @@ import { CategoryContext } from "../contexts/CategoryProvider";
 import { OrderContext } from "../contexts/OrderProvider";
 import { Link } from "react-router-dom";
 import { ConfirmationTable } from "../components/ConfirmationTable";
+import { my_orderDate } from "../models/types";
 
 const Confirmation = () => {
   const { selectedCategory } = React.useContext(CategoryContext);
   const { orderDetails, hasOrderDetails } = React.useContext(OrderContext);
-
-  const orderDate = () => {
-    const date = new Date(orderDetails.order.dateCreated);
-    return date.toLocaleTimeString();
-  };
 
   const ccNumber = (): string => {
     return orderDetails.customer.ccNumber.trim().slice(-4);
@@ -48,7 +44,7 @@ const Confirmation = () => {
             <li>
               Confirmation #: <b>{orderDetails.order.confirmationNumber}</b>
             </li>
-            <li>Time: {orderDate()}</li>
+            <li>Date: {my_orderDate(orderDetails.order.dateCreated)}</li>
           </ul>
           <ul className="customerInfo">
             <h3>Customer Information</h3>
