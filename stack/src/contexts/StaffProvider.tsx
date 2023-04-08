@@ -17,7 +17,6 @@ function StaffContextProvider({ children }: StaffProviderProps) {
   const [staffList, setStaffList] = useState([]);
 
   const fetchStaffList = async () => {
-    console.log("Getting the Featured Books");
     try {
       const response = await axios.get("/api/books/featured/all");
       setStaffList(response.data);

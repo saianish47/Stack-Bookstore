@@ -50,10 +50,10 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const [count, setCount] = useState(0);
 
   const { user } = useUser();
-
   const clearCart = () => {
     cart.clear();
     setCart(cart);
+    console.log(cart);
     setCount(0);
     sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
   };
@@ -61,7 +61,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     cart.addBook(book);
     setCart(cart);
     setCount(cart.numberOfItems);
-    console.log(`count in cart provider ${count}`);
     sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
   };
 

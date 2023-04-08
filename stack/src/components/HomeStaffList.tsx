@@ -3,7 +3,6 @@ import { StaffContext } from "../contexts/StaffProvider";
 
 const HomeStaffList = () => {
   const { staffList } = React.useContext(StaffContext);
-  console.log("Rendering HomeStaffList component");
   return (
     <div>
       <h1 className="staff-picks">Staff Picks of the month</h1>

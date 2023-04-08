@@ -87,6 +87,10 @@ export class ShoppingCart {
     }
   }
 
+  // toArray(): ShoppingCartItem[] {
+  //   return [...this.itemArray];
+  // }
+
   // remove(book: BookItem) {
   //   if (!this.itemArray[book.book_id]) {
   //     return;

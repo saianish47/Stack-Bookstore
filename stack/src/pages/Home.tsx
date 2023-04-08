@@ -4,7 +4,6 @@ import HomeStaffList from "../components/HomeStaffList";
 import { StaffContextProvider } from "../contexts/StaffProvider";
 
 const Home = () => {
-  console.log("Inside Home");
   return (
     <div className="home-page">
       <section className="left-body my-container">

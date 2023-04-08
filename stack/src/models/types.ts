@@ -1,4 +1,4 @@
-// Contains all the custom types we want to use for our application
+// Contains all the custom types we want to use for the application
 export interface BookItem {
   book_id: number;
   title: string;

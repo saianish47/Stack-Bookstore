@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { BooksContext } from "../contexts/BookProvider";
 import CategoryBookListItem from "./CategoryBookListItem";
-import { CartProvider } from "../contexts/CartProvider";
 
 function CategoryBookList() {
   const { books } = useContext(BooksContext);
@@ -10,9 +9,7 @@ function CategoryBookList() {
     <ul className="bookList">
       {books.map((book) => (
         <div key={book.book_id}>
-          <CartProvider>
-            <CategoryBookListItem book={book} />
-          </CartProvider>
+          <CategoryBookListItem book={book} />
         </div>
       ))}
     </ul>

@@ -22,7 +22,6 @@ export const BooksContext = React.createContext<BooksContextValue>({
 function BooksProvider({ children, categoryName = "" }: BookProviderProps) {
   const [books, setBooks] = useState([]);
   const updateBooks = async (categoryName: string) => {
-    console.log(categoryName);
     try {
       const books = await axios
         .get(`/api/categories/name/${categoryName}/books`)

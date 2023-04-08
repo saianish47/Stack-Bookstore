@@ -8,7 +8,7 @@ import { Profile } from "./Profile";
 
 function Header() {
   const { category } = React.useContext(CategoryContext);
-  const { cart } = React.useContext(CartContext);
+  const { count } = React.useContext(CartContext);
   const { user } = useUser();
   const navigate = useNavigate();
 
@@ -41,32 +41,10 @@ function Header() {
         <Link to="/cart">
           <section className="my-cart">
             <i className="cart fa-solid fa-cart-shopping"></i>
-            <span className="badge"> {cart.numberOfItems} </span>
+            <span className="badge"> {count} </span>
           </section>
         </Link>
         {user ? (
-          // <section className="profile">
-          //   <button
-          //     className="button profile-button"
-          //     onClick={() => {
-          //       navigate("./profile");
-          //     }}
-          //   >
-          //     <i className="icon fa-solid fa-user"></i> Profile
-          //   </button>
-
-          //   <section className="logout">
-          //     <p
-          //       className="log"
-          //       title="Logout"
-          //       onClick={() => {
-          //         signOut(getAuth());
-          //       }}
-          //     >
-          //       Logout
-          //     </p>
-          //   </section>
-          // </section>
           <Profile />
         ) : (
           <section className="profile">
