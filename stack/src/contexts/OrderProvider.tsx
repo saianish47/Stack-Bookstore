@@ -9,6 +9,7 @@ interface OrderProviderProps {
 
 interface OrderContextValue {
   orderDetails: OrderDetails;
+  orderError: boolean;
   clearOrderDetails: () => void;
   setOrderDetails: (order: OrderDetails) => void;
   hasOrderDetails: () => boolean;
@@ -16,6 +17,7 @@ interface OrderContextValue {
 
 export const OrderContext = React.createContext<OrderContextValue>({
   orderDetails: {} as OrderDetails,
+  orderError: false,
   clearOrderDetails: () => {},
   setOrderDetails: () => {},
   hasOrderDetails: () => false,
@@ -61,12 +63,15 @@ export const OrderProvider = ({ children }: OrderProviderProps) => {
     }
   }, [sessionStorage.getItem(ORDER_DETAIL_STORAGE_KEY)]);
   const [orderDetails, setOrder] = React.useState(temporderDetails);
+  const [orderError, setOrderError] = React.useState(false);
 
   const setOrderDetails = (order: OrderDetails) => {
-    // const newOrder: OrderDetails = order;
-    // Object.assign(order, orderDetails);
-    setOrder(order);
-    sessionStorage.setItem(ORDER_DETAIL_STORAGE_KEY, JSON.stringify(order));
+    if (order) {
+      setOrder(order);
+      sessionStorage.setItem(ORDER_DETAIL_STORAGE_KEY, JSON.stringify(order));
+    } else {
+      setOrderError(true);
+    }
   };
   const clearOrderDetails = () => {
     sessionStorage.removeItem(ORDER_DETAIL_STORAGE_KEY);
@@ -81,6 +86,7 @@ export const OrderProvider = ({ children }: OrderProviderProps) => {
     <OrderContext.Provider
       value={{
         orderDetails,
+        orderError,
         setOrderDetails,
         hasOrderDetails,
         clearOrderDetails,

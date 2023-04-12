@@ -38,8 +38,12 @@ const yearFrom = (index: number) => {
   return new Date().getFullYear() + index;
 };
 const MyFormSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  address: Yup.string().required("Address is required"),
+  name: Yup.string()
+    .required("Name is required")
+    .test("len", "Must be more than 4 characters", (val) => val.length >= 4),
+  address: Yup.string()
+    .required("Address is required")
+    .test("len", "Need atleast 4 characters", (address) => address.length >= 4),
   phone: Yup.string()
     .required("Phone is required")
     .test("is-phone", "Invalid phone", isMobilePhone),
@@ -93,6 +97,7 @@ function Checkout() {
       values.checkoutStatus = "ERROR";
     }
     setvalues(values);
+    console.log(values.checkoutStatus);
   };
 
   return (
@@ -115,10 +120,11 @@ function Checkout() {
             initialValues={initialValues}
             validationSchema={MyFormSchema}
             onSubmit={(values, isValid) => {
+              console.log(values.checkoutStatus);
               handleSubmit(values, isValid);
             }}
           >
-            {({ isSubmitting }) => (
+            {() => (
               <>
                 <Form>
                   <div className="input-error">
@@ -126,7 +132,7 @@ function Checkout() {
                       <label htmlFor="name">Name</label>
                       <Field type="text" name="name" />
                     </div>
-                    <div>
+                    <div className="error">
                       <ErrorMessage name="name" />
                     </div>
                   </div>
@@ -135,7 +141,7 @@ function Checkout() {
                       <label htmlFor="address">Address</label>
                       <Field type="text" name="address" />
                     </div>
-                    <div>
+                    <div className="error">
                       <ErrorMessage name="address" />
                     </div>
                   </div>
@@ -144,7 +150,7 @@ function Checkout() {
                       <label htmlFor="phone">Phone</label>
                       <Field type="text" name="phone" />
                     </div>
-                    <div>
+                    <div className="error">
                       <ErrorMessage name="phone" />
                     </div>
                   </div>
@@ -153,7 +159,7 @@ function Checkout() {
                       <label htmlFor="email">Email</label>
                       <Field type="text" name="email" />
                     </div>
-                    <div>
+                    <div className="error">
                       <ErrorMessage name="email" />
                     </div>
                   </div>
@@ -162,7 +168,7 @@ function Checkout() {
                       <label htmlFor="ccNumber">Credit card</label>
                       <Field type="text" name="ccNumber" />
                     </div>
-                    <div>
+                    <div className="error">
                       <ErrorMessage name="ccNumber" />
                     </div>
                   </div>
@@ -179,7 +185,7 @@ function Checkout() {
                         </option>
                       ))}
                     </Field>
-                    <ErrorMessage name="ccExpiryMonth" />
+                    <ErrorMessage name="ccExpiryMonth" className="error" />
                     <Field
                       name="ccExpiryYear"
                       as="select"
@@ -191,14 +197,14 @@ function Checkout() {
                         </option>
                       ))}
                     </Field>
-                    <ErrorMessage name="ccExpiryYear" />
+                    <ErrorMessage name="ccExpiryYear" className="error" />
                   </div>
 
                   <div className="submit-button">
                     <button
                       type="submit"
                       className="button"
-                      disabled={isSubmitting}
+                      // disabled={isSubmitting}
                     >
                       Complete Purchase
                     </button>

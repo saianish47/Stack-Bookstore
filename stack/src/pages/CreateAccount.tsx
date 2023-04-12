@@ -12,36 +12,55 @@ const CreateAccount = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string>("");
+  const emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   const navigate = useNavigate();
   const create = async () => {
-    try {
-      if (password != confirmPassword) {
-        setError("Passwords Does not match");
-        return;
-      }
-      await createUserWithEmailAndPassword(getAuth(), email, password)
-        .then((userCred) => {
-          updateProfile(userCred.user, {
-            displayName: name,
-          })
-            .then(() => {
-              console.log(
-                `User ${userCred.user.uid} updated with display name: ${userCred.user.displayName}`
-              );
+    if (error.length === 0) {
+      try {
+        if (password != confirmPassword) {
+          setError("Passwords Does not match");
+          return;
+        }
+        await createUserWithEmailAndPassword(getAuth(), email, password)
+          .then((userCred) => {
+            updateProfile(userCred.user, {
+              displayName: name,
             })
-            .catch((error) => {
-              console.log(`Error updating user profile: ${error}`);
-            });
-        })
-        .catch((error) => {
-          console.log(`Error creating user ${error}`);
-        });
-      navigate(-1);
-    } catch (e) {
-      setError(e as string);
+              .then(() => {
+                console.log(
+                  `User ${userCred.user.uid} updated with display name: ${userCred.user.displayName}`
+                );
+              })
+              .catch((error) => {
+                console.log(`Error updating user profile: ${error}`);
+              });
+          })
+          .catch((error) => {
+            console.log(`Error creating user ${error}`);
+          });
+        navigate("/");
+      } catch (e) {
+        setError(e as string);
+      }
     }
   };
 
+  const validate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.name) {
+      case "email":
+        emailPattern.test(e.target.value)
+          ? setError("")
+          : setError("Email not valid");
+        break;
+      case "password":
+        e.target.value.length < 8
+          ? setError("Password must be atleast 8 characters")
+          : setError("");
+        break;
+      default:
+        break;
+    }
+  };
   return (
     <div className="auth-page">
       <div className="auth-page-body">
@@ -50,7 +69,8 @@ const CreateAccount = () => {
         <div>
           <i className="fa-solid fa-user"></i>
           <input
-            placeholder="Enter Your Name"
+            placeholder="Enter Your Name (Optional)"
+            name={email}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -59,24 +79,32 @@ const CreateAccount = () => {
           <i className="fa-solid fa-envelope"></i>
           <input
             placeholder="Enter Your Email"
+            name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              validate(e);
+              setEmail(e.target.value);
+            }}
           />
         </div>
         <div>
           <i className="fa-solid fa-lock"></i>
           <input
             type="password"
-            placeholder="Enter Your Password"
+            placeholder="Enter Password"
+            name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              validate(e);
+              setPassword(e.target.value);
+            }}
           />
         </div>
         <div>
           <i className="fa-solid fa-lock-open"></i>
           <input
-            type="password"
-            placeholder="Confirm Your Password"
+            type="text"
+            placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />

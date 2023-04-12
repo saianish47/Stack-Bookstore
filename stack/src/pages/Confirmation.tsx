@@ -7,7 +7,8 @@ import { my_orderDate } from "../models/types";
 
 const Confirmation = () => {
   const { selectedCategory } = React.useContext(CategoryContext);
-  const { orderDetails, hasOrderDetails } = React.useContext(OrderContext);
+  const { orderDetails, hasOrderDetails, orderError } =
+    React.useContext(OrderContext);
 
   const ccNumber = (): string => {
     return orderDetails.customer.ccNumber.trim().slice(-4);
@@ -30,13 +31,25 @@ const Confirmation = () => {
   return (
     <div className="confirmation-area">
       {!flag ? (
-        <div>
-          <p>Sorry we cannot find your order details</p>
-          <section className="bottom-button"></section>
-          <section className="sec-button bottom-button">
-            <Link to="/">Go to home Page</Link>
-          </section>
-        </div>
+        <>
+          {orderError ? (
+            <>
+              <p> Payment Error </p>
+              <section className="bottom-button"></section>
+              <section className="sec-button bottom-button">
+                <Link to="/cart">Go to Cart</Link>
+              </section>
+            </>
+          ) : (
+            <div>
+              <p>Sorry we cannot find your order details</p>
+              <section className="bottom-button"></section>
+              <section className="sec-button bottom-button">
+                <Link to="/">Go to home Page</Link>
+              </section>
+            </div>
+          )}
+        </>
       ) : (
         <>
           <h2 className="conf-header">Confirmation Details</h2>
@@ -46,7 +59,7 @@ const Confirmation = () => {
             </li>
             <li>Date: {my_orderDate(orderDetails.order.dateCreated)}</li>
           </ul>
-          <ul className="customerInfo">
+          <ul className="customerInfo mb-3">
             <h3>Customer Information</h3>
             <li>{orderDetails.customer.name}</li>
             <li>{orderDetails.customer.address}</li>
@@ -57,7 +70,7 @@ const Confirmation = () => {
             </li>
           </ul>
           <ConfirmationTable orderDetails={orderDetails} />
-          <section className="bottom-button">
+          <section className="bottom-button mt-3 mb-3">
             <Link
               to={`/category/${selectedCategory}`}
               className="sec-button sec"

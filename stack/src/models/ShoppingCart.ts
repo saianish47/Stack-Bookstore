@@ -107,7 +107,6 @@ export class ShoppingCart {
    */
   update(book: BookItem, quantity: number) {
     if (quantity < 0 || quantity > 99) return;
-
     const existingItemIndex = this.itemArray.findIndex(
       (item) => item.book.book_id == book.book_id
     );

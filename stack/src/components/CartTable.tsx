@@ -13,9 +13,6 @@ function CartTable() {
   const clear = () => {
     clearCart();
   };
-  // React.useEffect(() => {
-  //   clearCart();
-  // }, [cart]);
   const { selectedCategory } = React.useContext(CategoryContext);
   return (
     <div>

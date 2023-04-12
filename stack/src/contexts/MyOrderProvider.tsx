@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import useUser from "../hooks/useUser";
 import { OrderDetails } from "../models/types";
+import { OrderContext } from "./OrderProvider";
 
 interface MyOrderProviderProps {
   children: React.ReactNode;
@@ -22,6 +23,7 @@ export const MyOrderContext = React.createContext<MyOrderContextValue>({
 
 export const MyOrderProvider = ({ children }: MyOrderProviderProps) => {
   const { user } = useUser();
+  const { orderDetails } = useContext(OrderContext);
 
   const [myOrders, setMyOrders] = React.useState<OrderDetails[]>([]);
   const getAllOrders = async () => {
@@ -51,7 +53,7 @@ export const MyOrderProvider = ({ children }: MyOrderProviderProps) => {
 
   React.useEffect(() => {
     getAllOrders();
-  }, [user]);
+  }, [user, orderDetails]);
 
   return (
     <MyOrderContext.Provider

@@ -10,6 +10,7 @@ import {
 } from "../models/types";
 
 import { OrderContext } from "./OrderProvider";
+import axios from "axios";
 
 const CART_STORAGE_KEY = "ShoppingCart";
 
@@ -21,7 +22,7 @@ interface CartContextValue {
   cart: ShoppingCart;
   addToCart: (book: BookItem) => void;
   updateBookQuantity: (book: BookItem, quantity: number) => void;
-  clearCart: () => void;
+  clearCart: (action?: string) => void;
   placeOrder: (customerForm: CustomerForm) => Promise<void>;
   count: number;
   setCount: (count: number) => void;
@@ -50,18 +51,80 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const [count, setCount] = useState(0);
 
   const { user } = useUser();
-  const clearCart = () => {
+  React.useEffect(() => {
+    const fetchCart = async () => {
+      if (user) {
+        const url = "/api/cart";
+        const token = user && (await user.getIdToken());
+        const myCart = await axios
+          .get(url, { headers: { authtoken: token } })
+          .then((res) => res.data);
+        if (myCart.itemArray) {
+          myCart.itemArray.map((item: { book: BookItem; quantity: number }) => {
+            const { book, quantity } = item;
+            for (let i = 0; i < quantity; i++) {
+              cart.addBook(book);
+              setCart(cart);
+              setCount(cart.numberOfItems);
+              sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+            }
+          });
+        } else {
+          console.log("No cart for user");
+        }
+      }
+    };
+
+    fetchCart();
+  }, [user]);
+
+  const sendCart = async (book: BookItem, quantity: number) => {
+    try {
+      const { book_id } = book;
+      const token = user && (await user.getIdToken());
+      const res = await axios
+        .post(
+          "/api/cart",
+          {
+            cart: {
+              book_id: book_id,
+              quantity: quantity,
+            },
+          },
+          { headers: { authtoken: token } }
+        )
+        .then((rep) => rep.data);
+      if (res) {
+        console.log(res);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const deleteApi = async () => {
+    if (user) {
+      const url = "/api/cart";
+      const token = user && (await user.getIdToken());
+      await axios.delete(url, { headers: { authtoken: token } });
+    }
+  };
+
+  const clearCart = (action?: string) => {
     cart.clear();
     setCart(cart);
-    console.log(cart);
     setCount(0);
     sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    if (!action) {
+      deleteApi();
+    }
   };
+
   const addToCart = (book: BookItem) => {
     cart.addBook(book);
     setCart(cart);
     setCount(cart.numberOfItems);
     sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    sendCart(book, 1);
   };
 
   const updateBookQuantity = (book: BookItem, quantity: number) => {
@@ -69,13 +132,13 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     setCart(cart);
     setCount(cart.numberOfItems);
     sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    sendCart(book, quantity);
   };
 
   const placeOrder = async (customerForm: CustomerForm) => {
     const amount = asDollarsAndCents(cart.subtotal + cart.surcharge);
     const order = { cart: cart, customerForm: customerForm, amount: amount };
     orderStore.clearOrderDetails();
-    console.log(JSON.stringify(order, null, 2));
 
     const url = "/api/orders";
     const token = user && (await user.getIdToken());
@@ -95,10 +158,12 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       if (response.ok) {
         console.log("Order OK");
         clearCart();
+        return response.json();
       }
-
-      return response.json();
     });
+    if (!orderDetails) {
+      console.error(`Error occured: ${orderDetails}`);
+    }
     orderStore.setOrderDetails(orderDetails);
   };
 
