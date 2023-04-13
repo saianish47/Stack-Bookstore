@@ -1,37 +1,34 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import React, { useState } from "react";
-// import { AuthCredential, EmailAuthProvider } from "firebase/auth";
+import React, { useEffect, useState } from "react";
 
 interface ModalProps {
   promptForCredentials: (email: string, password: string) => void;
   modalShow: boolean;
+  setCancel: (cancel: boolean) => void;
 }
 
 export const ModalLogin = (props: ModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(props.modalShow);
-  //   React.useEffect(() => {
-  //     if (!show) {
-  //       //   reject(new Error("User canceled login"));
-  //     }
-  //   }, [show]);
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setEmail(event.target.value);
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setPassword(event.target.value);
 
   const handleClose = () => {
+    props.setCancel(true);
     setShow(false);
-    // reject(new Error("User canceled login"))
   };
+
+  useEffect(() => {
+    setShow(props.modalShow);
+  }, [props.modalShow]);
 
   const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     props.promptForCredentials(email, password);
     setShow(false);
-
-    // resolve(EmailAuthProvider.credential(email, password));
   };
 
   return (
@@ -70,6 +67,7 @@ export const ModalLogin = (props: ModalProps) => {
         </Button>
         <Button
           variant="primary"
+          className="button"
           type="button"
           onClick={(e) => handleSubmit(e)}
         >

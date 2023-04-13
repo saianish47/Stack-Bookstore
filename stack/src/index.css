@@ -180,7 +180,7 @@ body {
 
 .button:hover,
 .button:active {
-    background: var(--primary-color);
+    background: #006400;
     color: white;
     /*font-weight: bold;*/
 }

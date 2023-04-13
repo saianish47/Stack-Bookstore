@@ -22,12 +22,24 @@ export const Account = () => {
   const [isAlertShown, setIsAlert] = useState(true);
   const [isEditable, setIsEditable] = useState(false);
   const [show, setShow] = useState(false);
+  const [cancel, setCancel] = useState(false);
   const [reAuth, setReAuth] = useState<AuthCredential | null>(null);
   const { user } = useUser();
-  // const credential = promptForCredentials();
   const promptForCredentials = (authEmail: string, authPassword: string) => {
     setReAuth(EmailAuthProvider.credential(authEmail, authPassword));
   };
+
+  const setIsCancel = (val: boolean) => {
+    setCancel(val);
+  };
+
+  useEffect(() => {
+    if (cancel && user) {
+      setEmail(user.email ?? "");
+      setShow(false);
+      setCancel(false);
+    }
+  }, [cancel]);
 
   useEffect(() => {
     if (user) {
@@ -74,8 +86,12 @@ export const Account = () => {
                 message: "Reauthentication success",
               });
             })
-            .catch((error) => {
-              setAlert({ variant: "danger", message: error.message });
+            .catch(() => {
+              setAlert({
+                variant: "danger",
+                message: "Reauthentication Failed. Try Again",
+              });
+              setCancel(true);
             });
         } catch (error) {
           console.log(error);
@@ -90,14 +106,17 @@ export const Account = () => {
                 variant: "success",
                 message: "User Email Updated",
               });
+              setCancel(false);
             })
             .catch((error) => {
               setAlert({ variant: "danger", message: error.message });
+              setCancel(true);
             });
         } catch (error) {
           console.log(error);
         }
         setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
+        setShow(false);
       }
     };
 
@@ -111,7 +130,6 @@ export const Account = () => {
     if (user) {
       if (email.trim() != user.email) {
         setShow(true);
-        // await updateMyEmail();
       }
       if (name.trim() != user.displayName) {
         await updateProfile(user, {
@@ -188,6 +206,7 @@ export const Account = () => {
         <ModalLogin
           promptForCredentials={promptForCredentials}
           modalShow={show}
+          setCancel={setIsCancel}
         />
       )}
     </div>

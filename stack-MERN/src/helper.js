@@ -88,8 +88,6 @@ async function updateCart(uid, book_id, quantity, action = "None") {
         }
         const result = await cartCollection.updateOne(filter, update);
         if (result.modifiedCount === 1) {
-            console.log("inside update cart ${result}");
-            console.log(result);
             code = 200;
             status = "OK";
         } else {
@@ -203,8 +201,6 @@ async function generateCart(uid) {
             console.error(error);
         }
     }
-    console.log("inside generate cart ${itemArray}");
-    console.log(itemArray);
 
     const cart = {
         "itemArray": itemArray

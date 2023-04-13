@@ -13,7 +13,6 @@ function Orders() {
   const handleViewDetails = (order: OrderDetails) => {
     navigate(`${order.order.orderId}`);
   };
-  // console.log(myOrders);
 
   return (
     <div className="order-area">
