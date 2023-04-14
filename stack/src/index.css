@@ -176,6 +176,7 @@ body {
     padding: 0.5em 1em;
     cursor: pointer;
     border: 0;
+    min-width: 5em;
 }
 
 .button:hover,

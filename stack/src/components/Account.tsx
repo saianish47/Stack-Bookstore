@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
 import useUser from "../hooks/useUser";
-import {
-  AuthCredential,
-  EmailAuthProvider,
-  getAuth,
-  reauthenticateWithCredential,
-  sendPasswordResetEmail,
-  updateEmail,
-  updateProfile,
-} from "firebase/auth";
 import { AlertMe } from "./AlertMe";
 import { ModalLogin } from "./Modal";
 
@@ -22,24 +13,26 @@ export const Account = () => {
   const [isAlertShown, setIsAlert] = useState(true);
   const [isEditable, setIsEditable] = useState(false);
   const [show, setShow] = useState(false);
-  const [cancel, setCancel] = useState(false);
-  const [reAuth, setReAuth] = useState<AuthCredential | null>(null);
-  const { user } = useUser();
-  const promptForCredentials = (authEmail: string, authPassword: string) => {
-    setReAuth(EmailAuthProvider.credential(authEmail, authPassword));
-  };
 
-  const setIsCancel = (val: boolean) => {
-    setCancel(val);
-  };
+  const {
+    user,
+    updateDisplayName,
+    updateWithReauthenticate,
+    myAlert,
+    changePassword,
+    isCancelled,
+    promptForCredentials,
+    setIsCancelled,
+  } = useUser();
 
   useEffect(() => {
-    if (cancel && user) {
+    setAlert(myAlert);
+    if (isCancelled && user) {
       setEmail(user.email ?? "");
       setShow(false);
-      setCancel(false);
+      setIsCancelled(false);
     }
-  }, [cancel]);
+  }, [myAlert, isCancelled]);
 
   useEffect(() => {
     if (user) {
@@ -48,102 +41,27 @@ export const Account = () => {
     }
   }, [user]);
 
-  const handlePasswordChange = () => {
-    if (alert.message.length === 0 && user) {
-      sendPasswordResetEmail(getAuth(), email)
-        .then(() =>
-          setAlert({
-            variant: "success",
-            message: "Password Reset email sent.",
-          })
-        )
-        .catch((error) =>
-          setAlert({ variant: "danger", message: error.message })
-        );
-      setAlert({
-        variant: "success",
-        message: "Password Reset email sent.",
-      });
-    } else {
-      setAlert({
-        variant: "warning",
-        message: "Password Reset email already sent",
-      });
-    }
+  const handlePasswordChange = async () => {
+    await changePassword(email);
     setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
   };
   const handleEdit = () => {
     setIsEditable(true);
   };
   useEffect(() => {
-    const updateMyEmail = async () => {
-      if (user && reAuth) {
-        try {
-          await reauthenticateWithCredential(user, reAuth)
-            .then(() => {
-              setAlert({
-                variant: "success",
-                message: "Reauthentication success",
-              });
-            })
-            .catch(() => {
-              setAlert({
-                variant: "danger",
-                message: "Reauthentication Failed. Try Again",
-              });
-              setCancel(true);
-            });
-        } catch (error) {
-          console.log(error);
-        }
-        console.log("ReAuth Done");
-
-        setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
-        try {
-          await updateEmail(user, email)
-            .then(() => {
-              setAlert({
-                variant: "success",
-                message: "User Email Updated",
-              });
-              setCancel(false);
-            })
-            .catch((error) => {
-              setAlert({ variant: "danger", message: error.message });
-              setCancel(true);
-            });
-        } catch (error) {
-          console.log(error);
-        }
-        setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
-        setShow(false);
-      }
-    };
-
-    updateMyEmail();
-
-    setReAuth(null);
-  }, [reAuth]);
+    setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
+    setShow(false);
+  }, [alert]);
 
   const handleSave = async () => {
     setIsEditable(false);
     if (user) {
       if (email.trim() != user.email) {
         setShow(true);
+        updateWithReauthenticate({ type: "EMAIL", payload: email });
       }
       if (name.trim() != user.displayName) {
-        await updateProfile(user, {
-          displayName: name,
-        })
-          .then(() => {
-            setAlert({
-              variant: "success",
-              message: "User's Name Updated",
-            });
-          })
-          .catch((error) => {
-            setAlert({ variant: "danger", message: error.message });
-          });
+        await updateDisplayName(name);
         setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
       }
     }
@@ -183,11 +101,19 @@ export const Account = () => {
           </button>
           <div>
             {isEditable ? (
-              <button className="button" onClick={handleSave}>
+              <button
+                className="button"
+                style={{ padding: "0.6em" }}
+                onClick={handleSave}
+              >
                 Save
               </button>
             ) : (
-              <button className="button sec-button" onClick={handleEdit}>
+              <button
+                className="button"
+                style={{ padding: "0.6em" }}
+                onClick={handleEdit}
+              >
                 Edit
               </button>
             )}
@@ -206,7 +132,7 @@ export const Account = () => {
         <ModalLogin
           promptForCredentials={promptForCredentials}
           modalShow={show}
-          setCancel={setIsCancel}
+          setCancel={setIsCancelled}
         />
       )}
     </div>

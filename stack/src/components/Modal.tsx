@@ -32,7 +32,13 @@ export const ModalLogin = (props: ModalProps) => {
   };
 
   return (
-    <Modal show={show} onHide={() => setShow(false)}>
+    <Modal
+      show={show}
+      onHide={() => {
+        setShow(false);
+        props.setCancel(true);
+      }}
+    >
       <Modal.Header closeButton>
         <Modal.Title>Sign in to reauthenticate</Modal.Title>
       </Modal.Header>
