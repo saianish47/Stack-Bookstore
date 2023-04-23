@@ -52,12 +52,6 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        ignoredActionPaths: [
-          "userDetails.user",
-          "payload",
-          "meta.arg",
-          "user/getUser/fulfilled",
-        ],
       },
     }),
 });

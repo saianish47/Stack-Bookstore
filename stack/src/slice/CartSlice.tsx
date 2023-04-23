@@ -137,7 +137,6 @@ export const updateTheCart = createAsyncThunk(
   }
 );
 export const clearCart = createAsyncThunk("clearCart", async () => {
-  // const { user } = (getState() as RootState).userDetails;
   const user = getAuth().currentUser;
   try {
     if (user) {
@@ -147,6 +146,18 @@ export const clearCart = createAsyncThunk("clearCart", async () => {
     }
   } catch (e) {
     console.log(e);
+  }
+});
+
+export const fetchCart = createAsyncThunk("fetchCart", async () => {
+  const user = getAuth().currentUser;
+  if (user) {
+    const url = "/api/cart";
+    const token = user && (await user.getIdToken());
+    const myCart = await axios
+      .get(url, { headers: { authtoken: token } })
+      .then((res) => res.data);
+    return myCart;
   }
 });
 export const placeOrder = createAsyncThunk(
@@ -195,15 +206,6 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    // subTotal: (state) => {
-    //   const val = state.cart.reduce(
-    //     (amount: number, item: ShoppingCartItem) => {
-    //       return amount + item.book.price * item.quantity;
-    //     },
-    //     0
-    //   );
-    //   state.subtotal = val;
-    // },
     resetCart() {
       return initialState;
     },
@@ -234,6 +236,10 @@ const cartSlice = createSlice({
       })
       .addCase(sendToCart.rejected, () => {
         console.log("Rejected");
+      })
+      .addCase(fetchCart.fulfilled, (state, action) => {
+        console.log("Feteched cart");
+        action.payload.itemArray && (state.cart = action.payload.itemArray);
       });
   },
 });

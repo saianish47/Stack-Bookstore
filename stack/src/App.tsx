@@ -19,6 +19,7 @@ import { getCategory } from "./slice/CategorySlice";
 import { fetchStaffList } from "./slice/StaffSlice";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { resetUserDetails, setUserDetails } from "./slice/UserSlice";
+import { fetchCart } from "./slice/CartSlice";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ function App() {
             photoUrl: user.photoURL?.toString() ?? "",
           })
         );
+        dispatch(fetchCart());
       } else {
         dispatch(resetUserDetails());
       }
