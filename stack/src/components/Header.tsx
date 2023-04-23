@@ -1,15 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import HeaderDropdown from "./HeaderDropdown";
-import useUser from "../hooks/useUser";
 import React from "react";
-import { CategoryContext } from "../contexts/CategoryProvider";
-import { CartContext } from "../contexts/CartProvider";
+
 import { Profile } from "./Profile";
+import { useAppSelector } from "../hooks";
+import { cartCount } from "../models/types";
 
 function Header() {
-  const { category } = React.useContext(CategoryContext);
-  const { count } = React.useContext(CartContext);
-  const { user } = useUser();
+  const { category } = useAppSelector((state) => state.category);
+  const { cart } = useAppSelector((state) => state.cart);
+  const count = cartCount(cart);
+  const user = useAppSelector((state) => state.userDetails.user);
   const navigate = useNavigate();
 
   return (

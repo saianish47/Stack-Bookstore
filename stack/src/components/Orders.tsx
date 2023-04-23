@@ -1,19 +1,25 @@
 import React from "react";
-import { MyOrderContext } from "../contexts/MyOrderProvider";
 import { my_orderDate, OrderDetails } from "../models/types";
-import useUser from "../hooks/useUser";
 import NotFound from "../pages/NotFound";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { getAllOrders } from "../slice/OrdersSlice";
 
 function Orders() {
-  const { myOrders } = React.useContext(MyOrderContext);
-  const { user } = useUser();
+  const myOrders = useAppSelector((state) => state.orders.allOrders);
+  const { latestOrderDetails } = useAppSelector((state) => state.orders);
+
+  const user = useAppSelector((state) => state.userDetails.user);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleViewDetails = (order: OrderDetails) => {
     navigate(`${order.order.orderId}`);
   };
 
+  React.useEffect(() => {
+    dispatch(getAllOrders());
+  }, [user, latestOrderDetails]);
   return (
     <div className="order-area">
       {user ? (

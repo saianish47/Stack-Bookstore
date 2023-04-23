@@ -1,13 +1,14 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
+import { useAppDispatch } from "../hooks";
+import { promptForCredentials, setIsCancelled } from "../slice/UserSlice";
 
 interface ModalProps {
-  promptForCredentials: (email: string, password: string) => void;
   modalShow: boolean;
-  setCancel: (cancel: boolean) => void;
 }
 
 export const ModalLogin = (props: ModalProps) => {
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(props.modalShow);
@@ -17,7 +18,7 @@ export const ModalLogin = (props: ModalProps) => {
     setPassword(event.target.value);
 
   const handleClose = () => {
-    props.setCancel(true);
+    dispatch(setIsCancelled(true));
     setShow(false);
   };
 
@@ -27,7 +28,9 @@ export const ModalLogin = (props: ModalProps) => {
 
   const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    props.promptForCredentials(email, password);
+    dispatch(
+      promptForCredentials({ authEmail: email, authPassword: password })
+    );
     setShow(false);
   };
 
@@ -36,12 +39,10 @@ export const ModalLogin = (props: ModalProps) => {
       show={show}
       onHide={() => {
         setShow(false);
-        props.setCancel(true);
+        dispatch(setIsCancelled(true));
       }}
     >
-      <Modal.Header closeButton>
-        <Modal.Title>Sign in to reauthenticate</Modal.Title>
-      </Modal.Header>
+      <Modal.Header closeButton></Modal.Header>
       <Modal.Body>
         <Form>
           <Form.Group controlId="formBasicEmail">

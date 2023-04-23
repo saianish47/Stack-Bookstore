@@ -1,17 +1,18 @@
-import React, { useContext } from "react";
-import { BooksContext } from "../contexts/BookProvider";
+import React from "react";
 import CategoryBookListItem from "./CategoryBookListItem";
+import { useAppSelector } from "../hooks";
 
 function CategoryBookList() {
-  const { books } = useContext(BooksContext);
+  const { books } = useAppSelector((state) => state.books);
 
   return (
     <ul className="bookList">
-      {books.map((book) => (
-        <div key={book.book_id}>
-          <CategoryBookListItem book={book} />
-        </div>
-      ))}
+      {books &&
+        books.map((book) => (
+          <div key={book.book_id}>
+            <CategoryBookListItem book={book} />
+          </div>
+        ))}
     </ul>
   );
 }

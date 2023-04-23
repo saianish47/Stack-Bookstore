@@ -1,7 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { store } from "./reducer";
+import { Provider } from "react-redux";
 import "./index.css";
 import App from "./App";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor } from "./reducer";
+import { Loading } from "./pages/Loading";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "./firebase_config";
@@ -14,6 +19,10 @@ const app = initializeApp(firebaseConfig);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <PersistGate loading={<Loading />} persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
   </React.StrictMode>
 );

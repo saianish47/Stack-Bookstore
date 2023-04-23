@@ -1,7 +1,6 @@
 import express from "express";
 import { db, connectToDB } from "./connect.js";
 import helper from "./helper.js";
-import validator from "./validator.js"
 // import mycors from "./cors.js";
 import fs from "fs";
 import admin from "firebase-admin";

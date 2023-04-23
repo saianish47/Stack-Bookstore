@@ -1,11 +1,13 @@
 import { getAuth, signOut } from "firebase/auth";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { CartContext } from "../contexts/CartProvider";
+import { useAppDispatch } from "../hooks";
+import { resetCart } from "../slice/CartSlice";
 
 export const Profile = () => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const { clearCart } = useContext(CartContext);
+
+  const dispatch = useAppDispatch();
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 
@@ -13,7 +15,7 @@ export const Profile = () => {
 
   const handleLogout = () => {
     signOut(getAuth());
-    clearCart("CLEAR");
+    dispatch(resetCart());
   };
 
   return (

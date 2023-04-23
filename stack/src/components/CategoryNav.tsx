@@ -11,20 +11,21 @@ function CategoryNav({ categoryList, categoryName }: CategoryNavProps) {
   return (
     <nav className="category-nav">
       <ul className="category-buttons">
-        {categoryList.map((category) => (
-          <li key={category.category_id}>
-            <Link
-              to={"../category/" + category.name}
-              className={
-                category.name === categoryName
-                  ? "button selected-category-button"
-                  : "button unselected-category-button"
-              }
-            >
-              {category.name}
-            </Link>
-          </li>
-        ))}
+        {categoryList &&
+          categoryList.map((category) => (
+            <li key={category.category_id}>
+              <Link
+                to={"../category/" + category.name}
+                className={
+                  category.name === categoryName
+                    ? "button selected-category-button"
+                    : "button unselected-category-button"
+                }
+              >
+                {category.name}
+              </Link>
+            </li>
+          ))}
       </ul>
     </nav>
   );

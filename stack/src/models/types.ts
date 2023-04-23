@@ -6,6 +6,7 @@ export interface BookItem {
   price: number;
   is_public: boolean;
 }
+import { ShoppingCartItem } from "./ShoppingCartItem";
 
 export interface CategoryItem {
   category_id: number;
@@ -47,6 +48,12 @@ export interface cartItem {
   quantity: number;
 }
 
+export interface MyUserState {
+  email: string;
+  displayName: string;
+  photoUrl: string;
+}
+
 const PriceFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -62,4 +69,20 @@ export const my_orderDate = (orderDate: number) => {
   const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
 
   return formattedDate;
+};
+
+export const cartCount = (itemArray: cartItem[]): number => {
+  return itemArray.reduce((count: number, item: ShoppingCartItem) => {
+    return count + item.quantity;
+  }, 0);
+};
+
+export const cartSubTotal = (itemArray: cartItem[]) => {
+  return itemArray.reduce((amount: number, item: ShoppingCartItem) => {
+    return amount + item.book.price * item.quantity;
+  }, 0);
+};
+
+export const calculateSurcharge = (total: number) => {
+  return total * 0.03;
 };

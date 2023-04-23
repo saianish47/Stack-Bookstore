@@ -223,7 +223,7 @@ function createOrder(req, uid) {
     const amount = req.amount;
     const dateCreated = Date.now();
     const confirmationNumber = generateConfirmationNumber();
-    const cart = req.cart.itemArray;
+    const cart = req.cart;
     const customer = req.customerForm;
 
     const Order = {

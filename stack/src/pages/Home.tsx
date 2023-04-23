@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import HomeStaffList from "../components/HomeStaffList";
-import { StaffContextProvider } from "../contexts/StaffProvider";
 
 const Home = () => {
   return (
@@ -18,9 +17,7 @@ const Home = () => {
         </Link>
       </section>
       <section className="category-images my-container">
-        <StaffContextProvider>
-          <HomeStaffList />
-        </StaffContextProvider>
+        <HomeStaffList />
       </section>
     </div>
   );

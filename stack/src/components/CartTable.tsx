@@ -1,19 +1,27 @@
 import React from "react";
-import { asDollarsAndCents, BookItem } from "../models/types";
-import { CartContext } from "../contexts/CartProvider";
+import {
+  asDollarsAndCents,
+  BookItem,
+  cartCount,
+  cartSubTotal,
+} from "../models/types";
 import { Link } from "react-router-dom";
-import { CategoryContext } from "../contexts/CategoryProvider";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { clearCart, updateTheCart } from "../slice/CartSlice";
 
 function CartTable() {
-  const { count, cart, clearCart, updateBookQuantity } =
-    React.useContext(CartContext);
+  const dispatch = useAppDispatch();
   const updateCart = function (book: BookItem, quantity: number) {
-    updateBookQuantity(book, quantity);
+    dispatch(updateTheCart({ book, quantity }));
   };
+
+  const { cart } = useAppSelector((state) => state.cart);
+  const count = cartCount(cart);
   const clear = () => {
-    clearCart();
+    dispatch(clearCart());
   };
-  const { selectedCategory } = React.useContext(CategoryContext);
+
+  const { selectedCategory } = useAppSelector((state) => state.category);
   return (
     <div>
       <div className="cartNav">
@@ -26,7 +34,7 @@ function CartTable() {
             <p>Your cart : {count} books</p>
           )}
         </div>
-        {!cart.empty ? (
+        {!(cart.length === 0) ? (
           <p onClick={clear} className="t-button">
             clear cart
           </p>
@@ -35,14 +43,14 @@ function CartTable() {
         )}
       </div>
       <div className="cart-table">
-        {!cart.empty ? (
+        {cart.length != 0 ? (
           <ul>
             <li className="table-heading">
               <div className="heading-book">Book</div>
               <div className="heading-price">Price / Quantity</div>
               <div className="heading-subtotal">Amount</div>
             </li>
-            {cart.items.map((item) => (
+            {cart.map((item) => (
               <li key={item.book.book_id}>
                 <div className="cart-book-image">
                   <img
@@ -81,7 +89,7 @@ function CartTable() {
               <div></div>
               <div></div>
               <div className="cart-book-total">
-                Total : {asDollarsAndCents(cart.subtotal)}
+                Total : {asDollarsAndCents(cartSubTotal(cart))}
               </div>
             </li>
           </ul>
@@ -93,7 +101,7 @@ function CartTable() {
         <Link to={`/category/${selectedCategory}`} className="sec-button sec">
           Back to Shopping
         </Link>
-        {cart.numberOfItems !== 0 ? (
+        {cartCount(cart) !== 0 ? (
           <Link to="/checkout" className="button CTA">
             Proceed to Checkout
           </Link>

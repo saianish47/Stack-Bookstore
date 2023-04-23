@@ -1,38 +1,37 @@
 import React, { useState, useEffect } from "react";
-import useUser from "../hooks/useUser";
 import { AlertMe } from "./AlertMe";
 import { ModalLogin } from "./Modal";
+import {
+  changePassword,
+  reauthenticateUser,
+  setIsCancelled,
+  updateDisplayName,
+  updateUserEmail,
+  updateWithReauthenticate,
+} from "../slice/UserSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { getAuth } from "firebase/auth";
 
 export const Account = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [alert, setAlert] = useState({
-    variant: "",
-    message: "",
-  });
   const [isAlertShown, setIsAlert] = useState(true);
   const [isEditable, setIsEditable] = useState(false);
   const [show, setShow] = useState(false);
+  const { reAuth } = useAppSelector((state) => state.userDetails);
 
-  const {
-    user,
-    updateDisplayName,
-    updateWithReauthenticate,
-    myAlert,
-    changePassword,
-    isCancelled,
-    promptForCredentials,
-    setIsCancelled,
-  } = useUser();
+  const user = getAuth().currentUser;
+
+  const dispatch = useAppDispatch();
+  const { isCancelled, myAlert } = useAppSelector((state) => state.userDetails);
 
   useEffect(() => {
-    setAlert(myAlert);
     if (isCancelled && user) {
       setEmail(user.email ?? "");
       setShow(false);
-      setIsCancelled(false);
+      dispatch(setIsCancelled(false));
     }
-  }, [myAlert, isCancelled]);
+  }, [isCancelled]);
 
   useEffect(() => {
     if (user) {
@@ -41,8 +40,16 @@ export const Account = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    const updateIt = async () => {
+      dispatch(reauthenticateUser());
+      !isCancelled && dispatch(updateUserEmail());
+    };
+    reAuth && updateIt();
+  }, [reAuth]);
+
   const handlePasswordChange = async () => {
-    await changePassword(email);
+    dispatch(changePassword(email));
     setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
   };
   const handleEdit = () => {
@@ -51,17 +58,17 @@ export const Account = () => {
   useEffect(() => {
     setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
     setShow(false);
-  }, [alert]);
+  }, [myAlert]);
 
   const handleSave = async () => {
     setIsEditable(false);
     if (user) {
       if (email.trim() != user.email) {
         setShow(true);
-        updateWithReauthenticate({ type: "EMAIL", payload: email });
+        dispatch(updateWithReauthenticate(email));
       }
       if (name.trim() != user.displayName) {
-        await updateDisplayName(name);
+        await dispatch(updateDisplayName(name));
         setIsAlert((prevIsAlertShown) => !prevIsAlertShown);
       }
     }
@@ -122,19 +129,13 @@ export const Account = () => {
       </div>
       <div className="account-alert">
         <AlertMe
-          variant={alert.variant}
-          message={alert.message}
+          variant={myAlert.variant}
+          message={myAlert.message}
           timeout={5}
           showAlert={isAlertShown}
         />
       </div>
-      {show && (
-        <ModalLogin
-          promptForCredentials={promptForCredentials}
-          modalShow={show}
-          setCancel={setIsCancelled}
-        />
-      )}
+      {show && <ModalLogin modalShow={show} />}
     </div>
   );
 };

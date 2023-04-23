@@ -1,16 +1,13 @@
 import React from "react";
 import { BookItem } from "../models/types";
-import { CartContext } from "../contexts/CartProvider";
+import { useAppDispatch } from "../hooks";
+import { addToCart } from "../slice/CartSlice";
 
 interface Props {
   book: BookItem;
 }
 function CategoryBookListItem({ book }: Props) {
-  const { addToCart } = React.useContext(CartContext);
-  // React.useEffect(() => {
-  //   setCount(cart.numberOfItems);
-  //   console.log(`count in cart provider ${count}`);
-  // }, [count]);
+  const dispatch = useAppDispatch();
 
   return (
     <li className="book-box">
@@ -31,7 +28,10 @@ function CategoryBookListItem({ book }: Props) {
           <li className="book-author">by {book.author}</li>
           <li className="book-price">$ {(book.price / 100).toFixed(2)}</li>
         </ul>
-        <button className="button add-to-cart" onClick={() => addToCart(book)}>
+        <button
+          className="button add-to-cart"
+          onClick={() => dispatch(addToCart(book))}
+        >
           <i className="fas fa-cart-plus"></i> Add to Cart
         </button>
       </div>

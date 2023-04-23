@@ -1,12 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from "../contexts/CartProvider";
-import { CategoryContext } from "../contexts/CategoryProvider";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { isMobilePhone, isCreditCard } from "../validator";
-import { asDollarsAndCents } from "../models/types";
+import {
+  asDollarsAndCents,
+  calculateSurcharge,
+  cartSubTotal,
+} from "../models/types";
 import * as Yup from "yup";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { placeOrder } from "../slice/CartSlice";
 
 interface Myvalues {
   name: string;
@@ -54,8 +58,11 @@ const MyFormSchema = Yup.object().shape({
 });
 
 function Checkout() {
-  const { cart, placeOrder } = React.useContext(CartContext);
-  const { selectedCategory } = React.useContext(CategoryContext);
+  const dispatch = useAppDispatch();
+  const { cart } = useAppSelector((state) => state.cart);
+  const { orderError } = useAppSelector((state) => state.orders);
+
+  const { selectedCategory } = useAppSelector((state) => state.category);
   const navigate = useNavigate();
 
   const initialValues: Myvalues = {
@@ -76,18 +83,24 @@ function Checkout() {
   ) => {
     if (isValid) {
       values.checkoutStatus = "PENDING";
-      await placeOrder({
-        name: values.name,
-        address: values.address,
-        phone: values.phone,
-        email: values.email,
-        ccNumber: values.ccNumber,
-        ccExpiryMonth: values.ccExpiryMonth,
-        ccExpiryYear: values.ccExpiryYear,
-      })
+      dispatch(
+        placeOrder({
+          name: values.name,
+          address: values.address,
+          phone: values.phone,
+          email: values.email,
+          ccNumber: values.ccNumber,
+          ccExpiryMonth: values.ccExpiryMonth,
+          ccExpiryYear: values.ccExpiryYear,
+        })
+      )
         .then(() => {
-          values.checkoutStatus = "OK";
-          navigate("/confirmation");
+          if (!orderError) {
+            values.checkoutStatus = "OK";
+            navigate("/confirmation");
+          } else {
+            values.checkoutStatus = "SERVER_ERROR";
+          }
         })
         .catch((reason) => {
           values.checkoutStatus = "SERVER_ERROR";
@@ -102,7 +115,7 @@ function Checkout() {
 
   return (
     <div className="checkout-page">
-      {cart.empty ? (
+      {cart.length === 0 ? (
         <section className="empty-checkout">
           <strong className="my-container">
             Please add an item to your cart to checkout
@@ -120,7 +133,6 @@ function Checkout() {
             initialValues={initialValues}
             validationSchema={MyFormSchema}
             onSubmit={(values, isValid) => {
-              console.log(values.checkoutStatus);
               handleSubmit(values, isValid);
             }}
           >
@@ -216,10 +228,15 @@ function Checkout() {
           <section className="checkout-details">
             Your card will be charged
             <strong>
-              {asDollarsAndCents(cart.subtotal + cart.surcharge)}{" "}
+              {asDollarsAndCents(
+                cartSubTotal(cart) + calculateSurcharge(cartSubTotal(cart))
+              )}{" "}
             </strong>
-            <br />(<strong> {asDollarsAndCents(cart.subtotal)}</strong>+
-            <strong>{asDollarsAndCents(cart.surcharge)} shipping)</strong>
+            <br />(<strong> {asDollarsAndCents(cartSubTotal(cart))}</strong>+
+            <strong>
+              {asDollarsAndCents(calculateSurcharge(cartSubTotal(cart)))}{" "}
+              shipping)
+            </strong>
           </section>
           <section className="checkoutStatusBox">
             {values.checkoutStatus !== "" ? (

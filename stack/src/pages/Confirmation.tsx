@@ -1,15 +1,15 @@
 import React from "react";
-import { CategoryContext } from "../contexts/CategoryProvider";
-import { OrderContext } from "../contexts/OrderProvider";
+import { useAppSelector } from "../hooks";
 import { Link } from "react-router-dom";
 import { ConfirmationTable } from "../components/ConfirmationTable";
 import { my_orderDate } from "../models/types";
 
 const Confirmation = () => {
-  const { selectedCategory } = React.useContext(CategoryContext);
-  const { orderDetails, hasOrderDetails, orderError } =
-    React.useContext(OrderContext);
-
+  const { selectedCategory } = useAppSelector((state) => state.category);
+  const { orderError } = useAppSelector((state) => state.orders);
+  const orderDetails = useAppSelector(
+    (state) => state.orders.latestOrderDetails
+  );
   const ccNumber = (): string => {
     return orderDetails.customer.ccNumber.trim().slice(-4);
   };
@@ -26,11 +26,10 @@ const Confirmation = () => {
     }
     return result;
   };
-  const flag = hasOrderDetails();
 
   return (
     <div className="confirmation-area">
-      {!flag ? (
+      {orderDetails.cart.length === 0 ? (
         <>
           {orderError ? (
             <>

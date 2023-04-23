@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { MyOrderContext } from "../contexts/MyOrderProvider";
 import { my_orderDate } from "../models/types";
 import { ConfirmationTable } from "./ConfirmationTable";
+import { useAppSelector } from "../hooks";
+import { getOrder } from "../slice/OrdersSlice";
 
 export const OrderDetailsComponent = () => {
   const { id } = useParams();
   const orderId = id?.toString() ?? "";
-  const { getOrder } = React.useContext(MyOrderContext);
-  const orderDetails = getOrder(orderId);
+  const orderDetails = useAppSelector(getOrder(orderId));
   const navigate = useNavigate();
 
   const goBack = () => {

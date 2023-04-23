@@ -2,16 +2,29 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "@firebase/util";
+import { useAppDispatch } from "../hooks";
+import { setUserDetails } from "../slice/UserSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const logIn = async () => {
     try {
-      await signInWithEmailAndPassword(getAuth(), email, password);
+      await signInWithEmailAndPassword(getAuth(), email, password).then(
+        (userAuth) => {
+          dispatch(
+            setUserDetails({
+              email: userAuth.user.email?.toString() ?? "",
+              displayName: userAuth.user.displayName?.toString() ?? "",
+              photoUrl: userAuth.user.photoURL?.toString() ?? "",
+            })
+          );
+        }
+      );
       navigate(-1);
     } catch (e: unknown) {
       if (e instanceof FirebaseError) {

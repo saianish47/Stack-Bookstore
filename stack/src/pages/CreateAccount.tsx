@@ -5,12 +5,15 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import { useAppDispatch } from "../hooks";
+import { setUserDetails } from "../slice/UserSlice";
 
 const CreateAccount = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const dispatch = useAppDispatch();
   const [error, setError] = useState<string>("");
   const emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   const navigate = useNavigate();
@@ -34,6 +37,13 @@ const CreateAccount = () => {
               .catch((error) => {
                 console.log(`Error updating user profile: ${error}`);
               });
+            dispatch(
+              setUserDetails({
+                email: userCred.user.email?.toString() ?? "",
+                displayName: userCred.user.displayName?.toString() ?? "",
+                photoUrl: userCred.user.photoURL?.toString() ?? "",
+              })
+            );
           })
           .catch((error) => {
             console.log(`Error creating user ${error}`);
