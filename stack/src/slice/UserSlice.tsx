@@ -1,22 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  AuthCredential,
   EmailAuthProvider,
   getAuth,
-  onAuthStateChanged,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
   updateEmail,
   updateProfile,
 } from "firebase/auth";
-import { User as FirebaseUser } from "firebase/auth";
 import { RootState } from "../reducer";
 import { MyUserState } from "../models/types";
 
 interface UserState {
   user: MyUserState | null;
   isLoading: boolean;
-  reAuth: AuthCredential | null;
+  reAuth: boolean;
   myAlert: {
     variant: string;
     message: string;
@@ -29,7 +26,7 @@ interface UserState {
 const initialState: UserState = {
   user: null,
   isLoading: true,
-  reAuth: null,
+  reAuth: false,
   myAlert: {
     variant: "",
     message: "",
@@ -38,19 +35,6 @@ const initialState: UserState = {
   emailPayload: "",
   resetPassDone: false,
 };
-
-export const getUserToken = createAsyncThunk("user/getUserToken", async () => {
-  const userAuthDetails = getAuth().currentUser;
-  return userAuthDetails;
-});
-export const setUser = createAsyncThunk("user/setUser", async () => {
-  return await new Promise<FirebaseUser | null>((resolve) => {
-    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
-      unsubscribe();
-      resolve(user);
-    });
-  });
-});
 
 export const changePassword = createAsyncThunk(
   "user/changePassword",
@@ -82,14 +66,14 @@ export const updateDisplayName = createAsyncThunk(
 
 export const reauthenticateUser = createAsyncThunk(
   "user/reauthenticateUser",
-  async (_, { getState }) => {
-    const { reAuth } = (getState() as RootState).userDetails;
+  async ({ email, password }: { email: string; password: string }) => {
     const user = getAuth().currentUser;
+    if (email.length == 0 || password.length == 0) return false;
+    const creds = EmailAuthProvider.credential(email, password);
     if (!user) throw new Error("User not found");
-    if (!reAuth) throw new Error("No Credentials");
 
     try {
-      reAuth && (await reauthenticateWithCredential(user, reAuth));
+      await reauthenticateWithCredential(user, creds);
       return true;
     } catch (e) {
       console.error(e);
@@ -117,18 +101,6 @@ const userSlice = createSlice({
   name: "userDetail",
   initialState,
   reducers: {
-    promptForCredentials(state, action) {
-      const { authEmail, authPassword } = action.payload;
-      if (authEmail.length == 0 || authPassword.length == 0) {
-        state.myAlert = {
-          variant: "danger",
-          message: "User Auth Failed",
-        };
-        state.isCancelled = true;
-      } else {
-        state.reAuth = EmailAuthProvider.credential(authEmail, authPassword);
-      }
-    },
     updateWithReauthenticate(state, action) {
       state.emailPayload = action.payload;
     },
@@ -145,7 +117,10 @@ const userSlice = createSlice({
       state.isCancelled = action.payload;
     },
     setUserDetails(state, action) {
-      state.user = action.payload;
+      if (action.payload) {
+        state.user = action.payload;
+        state.isLoading = false;
+      }
     },
     resetUserDetails() {
       return initialState;
@@ -153,27 +128,12 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(setUser.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(setUser.fulfilled, (state) => {
-        state.isLoading = false;
-        // const { email, displayName } = action.payload;
-        // state.user = action.payload;
-      })
-      .addCase(setUser.rejected, (state) => {
-        state.isLoading = false;
-        state.myAlert = {
-          variant: "danger",
-          message: "User Auth Failed",
-        };
-      })
       .addCase(reauthenticateUser.rejected, (state) => {
         state.myAlert = {
           variant: "danger",
           message: "User Reauthentication Failed",
         };
-        state.reAuth = null;
+        state.reAuth = false;
       })
       .addCase(reauthenticateUser.fulfilled, (state, action) => {
         if (action.payload) {
@@ -181,13 +141,15 @@ const userSlice = createSlice({
             variant: "success",
             message: "User Reauthentication Success",
           };
+          state.isCancelled = true;
+          state.reAuth = true;
         } else {
           state.myAlert = {
             variant: "danger",
             message: "User Reauthentication Failed",
           };
           state.isCancelled = true;
-          state.reAuth = null;
+          state.reAuth = false;
         }
       })
       .addCase(changePassword.fulfilled, (state, action) => {
@@ -210,7 +172,7 @@ const userSlice = createSlice({
             variant: "success",
             message: "Email updated successfully",
           };
-          state.reAuth = null;
+          state.reAuth = false;
         }
         state.isCancelled = true;
       })
@@ -233,7 +195,6 @@ const userSlice = createSlice({
 export const {
   setUserDetails,
   resetUserDetails,
-  promptForCredentials,
   updateWithReauthenticate,
   setIsCancelled,
   resetMyAlert,

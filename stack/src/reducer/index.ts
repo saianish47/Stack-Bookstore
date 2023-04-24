@@ -16,38 +16,27 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage/session";
 import OrdersSlice from "../slice/OrdersSlice";
+import { combineReducers } from "redux";
 
 const persistConfig = {
-  key: "cart_storage",
+  key: "root",
   storage,
-  whitelist: ["cart"],
+  whitelist: ["cart", "userDetails", "orders"],
 };
 
-const userPersistConfig = {
-  key: "user",
-  storage,
-  whitelist: ["userDetails"],
-};
+const rootReducer = combineReducers({
+  books: BookSlice,
+  category: CategorySlice,
+  stafflist: StaffSlice,
+  cart: CartSlice,
+  userDetails: UserSlice,
+  orders: OrdersSlice,
+});
 
-const orderPersistConfig = {
-  key: "orders",
-  storage,
-  whitelist: ["orders"],
-};
-
-const persistedCartReducer = persistReducer(persistConfig, CartSlice);
-const persistedUserReducer = persistReducer(userPersistConfig, UserSlice);
-const persistedOrderReducer = persistReducer(orderPersistConfig, OrdersSlice);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    books: BookSlice,
-    category: CategorySlice,
-    stafflist: StaffSlice,
-    cart: persistedCartReducer,
-    userDetails: persistedUserReducer,
-    orders: persistedOrderReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

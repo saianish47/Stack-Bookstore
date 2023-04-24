@@ -97,3 +97,15 @@ export const getOrder = (id: string) =>
       return order;
     }
   );
+
+// export const getTheOrders = (state: RootState) => state.orders.allOrders;
+
+// export const getOrder = createSelector(
+//   [getTheOrders, (state: RootState, orderId: string) => orderId],
+//   (allOrders, orderId) => {
+//     const order = allOrders.find(
+//       (o: OrderDetails) => o.order.orderId === orderId
+//     );
+//     return order ? order : null;
+//   }
+// );

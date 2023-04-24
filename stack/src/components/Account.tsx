@@ -3,7 +3,6 @@ import { AlertMe } from "./AlertMe";
 import { ModalLogin } from "./Modal";
 import {
   changePassword,
-  reauthenticateUser,
   setIsCancelled,
   updateDisplayName,
   updateUserEmail,
@@ -42,8 +41,9 @@ export const Account = () => {
 
   useEffect(() => {
     const updateIt = async () => {
-      dispatch(reauthenticateUser());
-      !isCancelled && dispatch(updateUserEmail());
+      // dispatch(reauthenticateUser());
+      dispatch(updateUserEmail());
+      console.log("Dispatched update email");
     };
     reAuth && updateIt();
   }, [reAuth]);

@@ -1,7 +1,7 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../hooks";
-import { promptForCredentials, setIsCancelled } from "../slice/UserSlice";
+import { reauthenticateUser, setIsCancelled } from "../slice/UserSlice";
 
 interface ModalProps {
   modalShow: boolean;
@@ -28,9 +28,7 @@ export const ModalLogin = (props: ModalProps) => {
 
   const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    dispatch(
-      promptForCredentials({ authEmail: email, authPassword: password })
-    );
+    dispatch(reauthenticateUser({ email: email, password: password }));
     setShow(false);
   };
 

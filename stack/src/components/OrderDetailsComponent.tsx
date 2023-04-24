@@ -9,6 +9,8 @@ export const OrderDetailsComponent = () => {
   const { id } = useParams();
   const orderId = id?.toString() ?? "";
   const orderDetails = useAppSelector(getOrder(orderId));
+  console.log(orderDetails);
+  console.log(sessionStorage.getItem("orders"));
   const navigate = useNavigate();
 
   const goBack = () => {
